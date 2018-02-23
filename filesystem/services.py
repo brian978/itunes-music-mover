@@ -2,10 +2,11 @@ import os
 import mutagen
 import types
 from shutil import copyfile
-from tags import Tags
+from metadata.tracks import Track
 
 
 class Crawler(object):
+    """ The class returns a list of files based on the given directory """
     _excluded = [".", "..", ".DS_Store"]
     _dir = None
 
@@ -27,8 +28,24 @@ class Crawler(object):
 
 
 class Mover(object):
+    """ The class handles the copy/move operations on the files """
     _dir = None
-    _tags = Tags()
+
+    @staticmethod
+    def _get_track(abs_path):
+        """ Returns a Track object """
+        obj = mutagen.File(abs_path)
+        if isinstance(obj, types.NoneType):
+            raise ImportError("The file '" + abs_path + "' cannot be loaded")
+
+        return Track(obj)
+
+    @staticmethod
+    def _format_filename(abs_path, track):
+        """ Formats the filename """
+        extension = os.path.splitext(abs_path)[1]
+
+        return track.artist() + " - " + track.title() + extension
 
     def __init__(self, dst_dir):
         """ Crawler constructor """
@@ -37,33 +54,18 @@ class Mover(object):
         else:
             self._dir = dst_dir
 
-    def _get_track(self, abs_path):
-        """ Returns the track file and updates the tags object with the track file """
-        track = mutagen.File(abs_path)
-        if isinstance(track, types.NoneType):
-            raise ImportError("The file '" + abs_path + "' cannot be loaded")
-
-        self._tags.track = track
-
-        return track
-
     def _check_dir(self):
+        """ Check if the directory exists and creates it if it doesn't """
         if not os.path.isdir(self._dir):
             os.makedirs(self._dir)
 
-    def _format_filename(self, abs_path):
-        """ Formats the filename """
-        extension = os.path.splitext(abs_path)[1]
-
-        return self._tags.artist() + " - " + self._tags.title() + extension
-
-    def _do_copy(self, src_file):
+    def _do_copy(self, src_full_path, dst_filename):
         """ Executes the copy operation """
-        dst_file = os.path.join(self._dir, self._format_filename(src_file))
+        dst_file = os.path.join(self._dir, dst_filename)
         if os.path.isfile(dst_file):
             os.remove(dst_file)
 
-        copyfile(src_file, dst_file)
+        copyfile(src_full_path, dst_file)
 
         return dst_file
 
@@ -81,8 +83,10 @@ class Mover(object):
                 continue
 
             try:
-                self._get_track(abs_path)
-                self._do_copy(abs_path)
+                track = Mover._get_track(abs_path)
+                dst_filename = self._format_filename(abs_path, track)
+
+                self._do_copy(abs_path, dst_filename)
             except ImportError, e:
                 errors.append({"import_error": e})
                 continue
