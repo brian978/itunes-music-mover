@@ -6,6 +6,7 @@ from tags import Tags
 
 
 class Crawler(object):
+    """ The class returns a list of files based on the given directory """
     _excluded = [".", "..", ".DS_Store"]
     _dir = None
 
@@ -27,6 +28,7 @@ class Crawler(object):
 
 
 class Mover(object):
+    """ The class handles the copy/move operations on the files """
     _dir = None
     _tags = Tags()
 
