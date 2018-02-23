@@ -6,3 +6,8 @@ You only need to run the following command
 `python app.py`
 
 If you want to set another path other than the default one, you can update it on line 4 in the app.py file
+
+# Supported formats
+* MP3
+* MP4
+* AIFF
