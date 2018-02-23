@@ -3,44 +3,45 @@ from mutagen.mp4 import MP4
 from mutagen.aiff import AIFF
 
 
-class Tags(object):
-    track = None
+class BaseTag(object):
+    _keys = {}
+    _tag_key = ""
+    _track = None
+    _handler = None
 
     @staticmethod
-    def _format_unicode(data):
+    def _encode(data):
         """ Formats the data for a specific format"""
         return data.encode("utf8", "replace")
 
-    def artist(self):
-        """ Returns the artist name """
-        tag_value = None
+    @classmethod
+    def name(cls):
+        return str(cls.__name__).lower()
 
-        if isinstance(self.track, MP3) or isinstance(self.track, AIFF):
-            obj = self.track.get("TPE1")
-            tag_value = obj.text[0]
+    def __init__(self, track, handler):
+        """ BaseTag constructor """
+        self._track = track
+        self._handler = handler
+        self._tag_key = self._keys[track.__class__.__name__]
 
-        if isinstance(self.track, MP4):
-            obj = self.track.get("\xa9ART")
-            tag_value = obj[0]
+    def get(self):
+        return BaseTag._encode(self._handler.get_value(self._track, self._tag_key))
 
-        if tag_value is not None:
-            return Tags._format_unicode(tag_value)
+    def set(self, value):
+        return self._handler.set_value(self._track)
 
-        raise NotImplementedError("Cannot extract the artist for the given audio file")
 
-    def title(self):
-        """ Returns the track title """
-        tag_value = None
+class Artist(BaseTag):
+    _keys = {
+        MP3.__name__: "TPE1",
+        AIFF.__name__: "TPE1",
+        MP4.__name__: "\xa9ART",
+    }
 
-        if isinstance(self.track, MP3) or isinstance(self.track, AIFF):
-            obj = self.track.get("TIT2")
-            tag_value = obj.text[0]
 
-        if isinstance(self.track, MP4):
-            obj = self.track.get("\xa9nam")
-            tag_value = obj[0]
-
-        if tag_value is not None:
-            return Tags._format_unicode(tag_value)
-
-        raise NotImplementedError("Cannot extract the title for the given audio file")
+class Title(BaseTag):
+    _keys = {
+        MP3.__name__: "TIT2",
+        AIFF.__name__: "TIT2",
+        MP4.__name__: "\xa9nam",
+    }
