@@ -11,3 +11,8 @@ If you want to set another path other than the default one, you can update it on
 * MP3
 * MP4
 * AIFF
+
+
+# Supported tags
+* Artist
+* Title

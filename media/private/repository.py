@@ -4,6 +4,7 @@ import inspect
 
 
 class HandlersRepository(object):
+    """ Repository that stores all the possible handlers """
     __repository = {}
     __loaded = False
 
@@ -39,6 +40,7 @@ class HandlersRepository(object):
 
 
 class TagsRepository(object):
+    """ Tag repository specific to a track that stores that track's tag objects """
     __repository = {}
 
     @staticmethod
@@ -58,6 +60,12 @@ class TagsRepository(object):
     def __init__(self, track):
         """ TagsRepository constructors """
         self.__load(track)
+
+    def __iter__(self):
+        return self.__repository.iteritems()
+
+    def get_repository(self):
+        return self.__repository
 
     def get(self, tag_cls):
         """ Return the tag handler """
