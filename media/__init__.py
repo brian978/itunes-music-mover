@@ -1,7 +1,6 @@
 import types
 import mutagen
-import tags
-import repository
+from media.private import tags, repository
 
 
 class Track(object):

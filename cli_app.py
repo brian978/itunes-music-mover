@@ -1,9 +1,9 @@
 import os
 from wrapper import prompt
-from metadata.tracks import Track
-from filesystem.services import Filesystem
+from media import Track
+from filesystem import resolve_path
 
-abs_path = Filesystem.resolve_path(prompt("Absolute path of the file: "))
+abs_path = resolve_path(prompt("Absolute path of the file: "))
 if not os.path.isfile(abs_path):
     print "The provided file path is invalid"
     quit(-1)

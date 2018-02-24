@@ -1,9 +1,8 @@
-from mutagen.mp3 import MP3
-from mutagen.mp4 import MP4
-from mutagen.aiff import AIFF
+from abc import abstractmethod
 
 
 class BaseTag(object):
+    """ Base tag class """
     _keys = {}
     _tag_key = ""
     _track = None
@@ -31,17 +30,28 @@ class BaseTag(object):
         return self._handler.set_value(self._track, self._tag_key, value)
 
 
-class Artist(BaseTag):
-    _keys = {
-        MP3.__name__: "TPE1",
-        AIFF.__name__: "TPE1",
-        MP4.__name__: "\xa9ART",
-    }
+class BaseHandler(object):
+    """ Base handler class """
+    _handles = []
 
+    @classmethod
+    def what_can_handle(cls):
+        return cls._handles
 
-class Title(BaseTag):
-    _keys = {
-        MP3.__name__: "TIT2",
-        AIFF.__name__: "TIT2",
-        MP4.__name__: "\xa9nam",
-    }
+    @classmethod
+    def can_handle(cls, track):
+        track_type = track.__class__.__name__
+        if track_type in cls._handles:
+            return True
+
+        return False
+
+    @staticmethod
+    @abstractmethod
+    def get_value(track, tag_key):
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def set_value(track, tag_key, value):
+        pass

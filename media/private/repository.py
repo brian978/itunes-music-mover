@@ -4,6 +4,7 @@ import inspect
 
 
 class HandlersRepository(object):
+    """ Repository that stores all the possible handlers """
     __repository = {}
     __loaded = False
 
@@ -39,6 +40,7 @@ class HandlersRepository(object):
 
 
 class TagsRepository(object):
+    """ Tag repository specific to a track that stores that track's tag objects """
     __repository = {}
 
     @staticmethod
