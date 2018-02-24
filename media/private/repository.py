@@ -61,6 +61,12 @@ class TagsRepository(object):
         """ TagsRepository constructors """
         self.__load(track)
 
+    def __iter__(self):
+        return self.__repository.iteritems()
+
+    def get_repository(self):
+        return self.__repository
+
     def get(self, tag_cls):
         """ Return the tag handler """
         tag_name = tag_cls.name()

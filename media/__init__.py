@@ -15,6 +15,9 @@ class Track(object):
         self.__track = track_obj
         self.__tags = repository.TagsRepository(track_obj)
 
+    def get_tags(self):
+        return self.__tags
+
     def save(self):
         self.__track.save()
 

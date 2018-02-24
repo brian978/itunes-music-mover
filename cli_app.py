@@ -1,6 +1,7 @@
 import os
 from wrapper import prompt
 from media import Track
+from media.private import BaseTag
 from filesystem import resolve_path
 
 abs_path = resolve_path(prompt("Absolute path of the file: "))
@@ -10,7 +11,10 @@ if not os.path.isfile(abs_path):
 
 track = Track(os.path.expanduser(abs_path))
 
+for tag, tag_obj in sorted(track.get_tags()):
+    if isinstance(tag_obj, BaseTag):
+        default_value = tag_obj.get()
+        tag_obj.set(prompt("tag[" + default_value + "]: ", default_value))
+
 """ Update the tags """
-track.artist(prompt("Artist [" + track.artist() + "]: ", track.artist()))
-track.title(prompt("Artist [" + track.title() + "]: ", track.title()))
 track.save()
