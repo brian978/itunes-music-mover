@@ -1,7 +1,7 @@
 import os
 from shutil import copyfile
 from . import resolve_path
-from media import Track
+from id3tagger.media import Track
 
 
 class Crawler(object):
@@ -79,7 +79,7 @@ class Mover(object):
                 dst_filename = self._format_filename(abs_path, track)
 
                 self._do_copy(abs_path, dst_filename)
-            except ImportError, e:
+            except ImportError as e:
                 errors.append({"import_error": e})
                 continue
 
