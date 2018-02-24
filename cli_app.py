@@ -1,12 +1,11 @@
 import os
-from wrapper import prompt
-from media import Track
-from media.private import BaseTag
-from filesystem import resolve_path
+from id3tagger.helpers import prompt, resolve_path
+from id3tagger.media import Track
+from id3tagger.media.private import BaseTag
 
 abs_path = resolve_path(prompt("Absolute path of the file: "))
 if not os.path.isfile(abs_path):
-    print "The provided file path is invalid"
+    print("The provided file path is invalid")
     quit(-1)
 
 track = Track(os.path.expanduser(abs_path))

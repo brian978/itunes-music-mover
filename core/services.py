@@ -1,7 +1,7 @@
 import os
 from shutil import copyfile
 from . import resolve_path
-from media import Track
+from id3tagger.media import Track
 
 
 class Crawler(object):
