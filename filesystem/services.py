@@ -1,8 +1,18 @@
 import os
-import mutagen
-import types
 from shutil import copyfile
 from metadata.tracks import Track
+
+
+class Filesystem(object):
+    @staticmethod
+    def resolve_path(abs_path):
+        if not isinstance(abs_path, str):
+            return ""
+
+        if abs_path[0] == "~":
+            return os.path.join(os.path.expanduser("~/"), abs_path[2:])
+
+        return abs_path
 
 
 class Crawler(object):
@@ -34,11 +44,7 @@ class Mover(object):
     @staticmethod
     def _get_track(abs_path):
         """ Returns a Track object """
-        obj = mutagen.File(abs_path)
-        if isinstance(obj, types.NoneType):
-            raise ImportError("The file '" + abs_path + "' cannot be loaded")
-
-        return Track(obj)
+        return Track(abs_path)
 
     @staticmethod
     def _format_filename(abs_path, track):
@@ -49,10 +55,7 @@ class Mover(object):
 
     def __init__(self, dst_dir):
         """ Crawler constructor """
-        if dst_dir[0] == "~":
-            self._dir = os.path.join(os.path.expanduser("~/"), dst_dir[2:])
-        else:
-            self._dir = dst_dir
+        self._dir = Filesystem.resolve_path(dst_dir)
 
     def _check_dir(self):
         """ Check if the directory exists and creates it if it doesn't """

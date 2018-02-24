@@ -35,12 +35,11 @@ class Mp3Tags(BaseHandler):
 
     @staticmethod
     def get_value(track, tag_key):
-        obj = track.get(tag_key)
-        return obj.text[0]
+        return track.get(tag_key).text[0]
 
     @staticmethod
     def set_value(track, tag_key, value):
-        pass
+        track.get(tag_key).text[0] = unicode(value)
 
 
 class Mp4Tags(BaseHandler):
@@ -48,9 +47,8 @@ class Mp4Tags(BaseHandler):
 
     @staticmethod
     def get_value(track, tag_key):
-        obj = track.get(tag_key)
-        return obj[0]
+        return track.get(tag_key)[0]
 
     @staticmethod
     def set_value(track, tag_key, value):
-        pass
+        track.get(tag_key)[0] = unicode(value)

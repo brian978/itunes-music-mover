@@ -28,7 +28,7 @@ class BaseTag(object):
         return BaseTag._encode(self._handler.get_value(self._track, self._tag_key))
 
     def set(self, value):
-        return self._handler.set_value(self._track)
+        return self._handler.set_value(self._track, self._tag_key, value)
 
 
 class Artist(BaseTag):
