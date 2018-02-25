@@ -8,11 +8,4 @@ You only need to run the following command
 If you want to set another path other than the default one, you can update it on line 4 in the app.py file
 
 # Supported formats
-* MP3
-* MP4
-* AIFF
-
-
-# Supported tags
-* Artist
-* Title
+Check the id3-tagger repo here: brian978/id3-tagger
